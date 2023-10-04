@@ -75,3 +75,15 @@ exports.deleteProductById = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Search for products based on specific criteria (e.g., name, price).
+exports.searchProducts = async (req, res) => {
+  try {
+    const filters = req.query;
+    const products = await Product.find(filters).exec();
+    res.status(200).json(products);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

@@ -15,6 +15,9 @@ app.use("/users", userRoutes); // Use the user routes at /users
 const productRoutes = require("./routes/productRoutes"); // Import the product routes
 app.use("/products", productRoutes); //Use the product routes at /products
 
+const authRoutes = require("./routes/authRoutes"); // Import the auth routes
+app.use("/auth", authRoutes); // Use the auth routes at /auth
+
 // Root route
 app.get("/", (req, res) => {
   res.send("Welcome to the best API in Gregorio Suarez street");

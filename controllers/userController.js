@@ -51,3 +51,14 @@ exports.deleteUserById = async (req, res) => {
 exports.updateUserById = async (req, res) => {
   // Implement the update logic here
 };
+
+// Get the profile of currently authenticated user.
+exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).exec();
+    res.send(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

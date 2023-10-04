@@ -19,4 +19,7 @@ router.delete("/:id", userController.deleteUserById);
 // Update a user by ID (You can implement this)
 router.put("/:id", userController.updateUserById);
 
+// Get the profile of currently authenticated user.
+router.get("/profile", userController.getProfile);
+
 module.exports = router;
