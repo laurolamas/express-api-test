@@ -1,4 +1,5 @@
 const User = require("../models/user");
+const { uploadImage } = require("../services/imageService");
 
 // Controller for handling user-related logic
 
@@ -15,10 +16,20 @@ exports.getAllUsers = async (req, res) => {
 
 // Create a new user
 exports.createUser = async (req, res) => {
+  const { name, email } = req.body;
+  const imageFile = req.file;
+
+  const imageUrl = await uploadImage(imageFile);
+
+  const user = new User({
+    name,
+    email,
+    imageUrl,
+  });
+
   try {
-    const user = new User(req.body);
-    await user.save();
-    res.send(user);
+    const savedUser = await user.save();
+    res.send(savedUser);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });

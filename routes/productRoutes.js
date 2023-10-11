@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const productController = require("../controllers/productController");
+const multer = require("multer");
+
+const upload = multer();
 
 // Create a new product
-router.post("/", productController.createProduct);
+router.post("/", upload.array("images", 4), productController.createProduct);
 
 // Get all products
 router.get("/", productController.getAllProducts);

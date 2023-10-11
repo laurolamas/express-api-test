@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   name: String,
   email: String,
+  imageUrl: String,
   // Add other fields as needed
 });
 

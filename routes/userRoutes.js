@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
+const multer = require("multer");
+
+const upload = multer();
 
 // Define routes for user-related actions
 
@@ -8,7 +11,7 @@ const userController = require("../controllers/userController");
 router.get("/", userController.getAllUsers);
 
 // Create a new user
-router.post("/", userController.createUser);
+router.post("/", upload.single("profileImage"), userController.createUser);
 
 // Get a user by ID
 router.get("/:id", userController.getUserById);

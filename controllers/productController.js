@@ -1,9 +1,37 @@
 const Product = require("../models/product");
+const { uploadImage } = require("../services/imageService");
 
 // Controller for handling product-related logic
 
 // Create a new product
 exports.createProduct = async (req, res) => {
+  const { name, description, price, condition, category, user_id } = req.body;
+  //const images = req.files.map((file) => file.path);
+  let images = req.files;
+
+  console.log(images);
+
+  const imageUrls = await Promise.all(
+    images.map(async (image) => {
+      const url = await uploadImage(image);
+      return url;
+    })
+  );
+
+  images = imageUrls;
+
+  console.log(images);
+
+  const productData = {
+    name,
+    description,
+    price,
+    condition,
+    category,
+    user_id,
+    images,
+  };
+
   try {
     const productData = req.body;
     const product = new Product(productData);
