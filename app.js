@@ -4,6 +4,10 @@ const app = express();
 const http = require("http").Server(app);
 const port = 5000;
 const db = require("./db"); // Import the database connection setup
+// Allow cors from any origin
+const cors = require("cors");
+// allow cors from any origin
+app.use(cors());
 
 // Middleware
 app.use(bodyParser.json());

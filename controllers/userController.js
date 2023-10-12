@@ -19,6 +19,10 @@ exports.createUser = async (req, res) => {
   const { name, email } = req.body;
   const imageFile = req.file;
 
+  if (!name || !email || !imageFile) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
   const imageUrl = await uploadImage(imageFile);
 
   const user = new User({
@@ -58,9 +62,34 @@ exports.deleteUserById = async (req, res) => {
   }
 };
 
-// Update a user by ID (You can implement this)
+// Update a user by ID
 exports.updateUserById = async (req, res) => {
-  // Implement the update logic here
+  const { name, email } = req.body;
+  const imageFile = req.file;
+
+  try {
+    const updatedFields = {
+      name,
+      email,
+    };
+
+    if (imageFile) {
+      updatedFields.imageUrl = await uploadImage(imageFile);
+    }
+
+    const user = await User.findByIdAndUpdate(req.params.id, updatedFields, {
+      new: true,
+    }).exec();
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.send(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 // Get the profile of currently authenticated user.

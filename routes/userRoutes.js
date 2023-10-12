@@ -10,17 +10,17 @@ const upload = multer();
 // Get all users
 router.get("/", userController.getAllUsers);
 
-// Create a new user
-router.post("/", upload.single("profileImage"), userController.createUser);
-
 // Get a user by ID
 router.get("/:id", userController.getUserById);
 
-// Delete a user by ID
-router.delete("/:id", userController.deleteUserById);
+// Create a new user
+router.post("/", upload.single("profileImage"), userController.createUser);
 
 // Update a user by ID (You can implement this)
 router.put("/:id", userController.updateUserById);
+
+// Delete a user by ID
+router.delete("/:id", userController.deleteUserById);
 
 // Get the profile of currently authenticated user.
 router.get("/profile", userController.getProfile);
