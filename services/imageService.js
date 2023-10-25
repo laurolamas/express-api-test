@@ -12,6 +12,7 @@ const containerName = "images";
 // recieve image object and uploads it to azure blob storage
 
 exports.uploadImage = async (image) => {
+  console.log("Entro a uploadImage");
   const containerClient = blobServiceClient.getContainerClient(containerName);
   const blobName = "image" + new Date().getTime() + ".jpg";
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
@@ -20,6 +21,8 @@ exports.uploadImage = async (image) => {
     bufferSize: 4 * 1024 * 1024, // 4MB buffer size
     maxBuffers: 20, // Maximum number of buffers
   };
+
+  console.log(image, typeof image);
 
   const stream = Stream.Readable.from(image.buffer);
 

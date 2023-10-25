@@ -16,13 +16,23 @@ const { validationResult } = require("express-validator");
  * @returns {Object} - JSON representation of the created product
  */
 exports.createProduct = async (req, res) => {
+  console.log("Entro a createProduct");
+  console.log("##################################");
+  console.log(req.body);
+  console.log("##################################");
+
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
   const { name, description, price, condition, category, user_id } = req.body;
-  let images = req.files;
+  let images = [];
+  if (req.body.images) {
+    images = req.body.images;
+  } else if (req.files) {
+    images = req.files;
+  }
 
   /**
    * Uploads images and returns their URLs
@@ -32,9 +42,9 @@ exports.createProduct = async (req, res) => {
    * @returns {Promise<Array>} - Array of URLs for the uploaded images
    */
   const imageUrls = await Promise.all(
-    images.map(async (image) => {
-      const url = await uploadImage(image);
-      return url;
+    Array.from(images).map(async (image) => {
+      const imageUrl = await uploadImage(image);
+      return imageUrl;
     })
   );
 
@@ -69,6 +79,25 @@ exports.createProduct = async (req, res) => {
 exports.getAllProducts = async (req, res) => {
   try {
     const products = await Product.find().exec();
+    res.status(200).json(products);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+/**
+ * Get products by user ID
+ * @function
+ * @async
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @returns {Object} - JSON representation of all products
+ */
+exports.getProductsByUserId = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const products = await Product.find({ user_id: userId }).exec();
     res.status(200).json(products);
   } catch (err) {
     console.error(err);
@@ -118,6 +147,7 @@ exports.updateProductById = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
+    console.log("actualizado", product);
     res.status(200).json(product);
   } catch (err) {
     console.error(err);

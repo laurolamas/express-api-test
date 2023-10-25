@@ -54,6 +54,8 @@ router.get("/search", productController.searchProducts);
  */
 router.get("/:id", productController.getProductById);
 
+router.get("/user/:id", productController.getProductsByUserId);
+
 /**
  * @description Update a product by ID
  * @method PUT

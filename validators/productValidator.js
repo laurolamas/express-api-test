@@ -27,9 +27,9 @@ exports.createProductValidator = [
     .withMessage("Category is required")
     .isLength({ max: 50 })
     .withMessage("Category must be less than 50 characters"),
-  body("user_id")
+  /* body("user_id")
     .notEmpty()
     .withMessage("User ID is required")
     .custom((value) => mongoose.Types.ObjectId.isValid(value))
-    .withMessage("Invalid User ID"),
+    .withMessage("Invalid User ID"), */
 ];
