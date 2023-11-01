@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   imageUrl: String,
+  favProducts: [String], // Array of product IDs
   // Add other fields as needed
 });
 

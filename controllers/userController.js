@@ -29,6 +29,7 @@ exports.createUser = async (req, res) => {
     name,
     email,
     imageUrl,
+    favProducts: [],
   });
 
   try {
@@ -64,18 +65,21 @@ exports.deleteUserById = async (req, res) => {
 
 // Update a user by ID
 exports.updateUserById = async (req, res) => {
-  const { name, email } = req.body;
+  const { name, email, favProducts } = req.body;
   const imageFile = req.file;
 
   try {
     const updatedFields = {
-      name,
-      email,
+      name: name,
+      email: email,
+      favProducts: favProducts,
     };
 
     if (imageFile) {
       updatedFields.imageUrl = await uploadImage(imageFile);
     }
+
+    console.log(updatedFields, req.body, req.params)
 
     const user = await User.findByIdAndUpdate(req.params.id, updatedFields, {
       new: true,
