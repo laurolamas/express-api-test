@@ -3,19 +3,12 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const app = express();
 const http = require("http").Server(app);
-const port = 5000;
+const port = 8080;
 const db = require("./utils/db"); // Import the database connection setup
 const cors = require("cors");
 
 // allow cors from any origin
-// app.use(cors());
-
-app.use(
-  cors({
-    origin: "http://localhost:3000", // Replace with the actual origin of your frontend
-    credentials: true,
-  })
-);
+app.use(cors());
 
 // Middleware
 app.use(bodyParser.json());
