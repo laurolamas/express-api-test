@@ -1,9 +1,10 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 const app = express();
 const http = require("http").Server(app);
 const port = 5000;
-const db = require("./db"); // Import the database connection setup
+const db = require("./utils/db"); // Import the database connection setup
 const cors = require("cors");
 
 // allow cors from any origin
@@ -11,6 +12,9 @@ app.use(cors());
 
 // Middleware
 app.use(bodyParser.json());
+
+// Cookie parser
+app.use(cookieParser())
 
 // Routes
 const userRoutes = require("./routes/userRoutes"); // Import the user routes

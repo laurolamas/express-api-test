@@ -2,27 +2,31 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const multer = require("multer");
-
+const { checkAuth } = require("../utils/authValidator");
 const upload = multer();
 
-// Define routes for user-related actions
 
-// Get all users
+
+// Get all users - REMOVE THIS BEFORE DEPLOYMENT
 router.get("/", userController.getAllUsers);
 
-// Get a user by ID
+// Get the profile of currently authenticated user.
+router.get("/profile", checkAuth, userController.getProfile);
+
+// Get a user by id
 router.get("/:id", userController.getUserById);
 
 // Create a new user
-router.post("/", upload.single("profileImage"), userController.createUser);
+router.post("/", (req, res) => {
+    res.json({ message: "usa la ruta auth/register bobo" })
+});
 
-// Update a user by ID (You can implement this)
-router.put("/:id", userController.updateUserById);
+// Update a user
+router.put("/", checkAuth, userController.updateUserById);
 
 // Delete a user by ID
-router.delete("/:id", userController.deleteUserById);
+router.delete("/", checkAuth, userController.deleteUserById);
 
-// Get the profile of currently authenticated user.
-router.get("/profile", userController.getProfile);
+
 
 module.exports = router;

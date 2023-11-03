@@ -39,4 +39,10 @@ exports.uploadImage = async (image) => {
 
 // recieve image url and deletes it from azure blob storage
 //async function deleteImage(imageUrl) {}
-exports.deleteImage = async (imageUrl) => {};
+exports.deleteImage = async (imageUrl) => {
+  const containerClient = blobServiceClient.getContainerClient(containerName);
+  const blobName = imageUrl.split("/").pop();
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  const deleteResponse = await blockBlobClient.delete();
+  console.log(`Deleted blob successfully: ${deleteResponse.requestId}`);
+};

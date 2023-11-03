@@ -1,6 +1,7 @@
 const Product = require("../models/product");
 const { uploadImage } = require("../services/imageService");
 const { validationResult } = require("express-validator");
+const { deleteProductService } = require("../services/productService");
 
 /**
  * Controller for handling product-related logic
@@ -16,31 +17,23 @@ const { validationResult } = require("express-validator");
  * @returns {Object} - JSON representation of the created product
  */
 exports.createProduct = async (req, res) => {
-  console.log("Entro a createProduct");
-  console.log("##################################");
-  console.log(req.body);
-  console.log("##################################");
+  const { name, description, price, condition, category } = req.body;
+  const user_id = req.user._id;
+  let images = [];
 
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, description, price, condition, category, user_id } = req.body;
-  let images = [];
   if (req.body.images) {
     images = req.body.images;
   } else if (req.files) {
     images = req.files;
   }
 
-  /**
-   * Uploads images and returns their URLs
-   * @function
-   * @async
-   * @param {Array} images - Array of images to upload
-   * @returns {Promise<Array>} - Array of URLs for the uploaded images
-   */
+
+  // Uploads images and returns their URLs
   const imageUrls = await Promise.all(
     Array.from(images).map(async (image) => {
       const imageUrl = await uploadImage(image);
@@ -48,6 +41,7 @@ exports.createProduct = async (req, res) => {
     })
   );
 
+  // Create a new product
   const productData = {
     name,
     description,
@@ -139,6 +133,8 @@ exports.updateProductById = async (req, res) => {
   try {
     const productId = req.params.id;
     const updatedProductData = req.body;
+    const userId = req.user._id;
+
     const product = await Product.findByIdAndUpdate(
       productId,
       updatedProductData,
@@ -147,7 +143,6 @@ exports.updateProductById = async (req, res) => {
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    console.log("actualizado", product);
     res.status(200).json(product);
   } catch (err) {
     console.error(err);
@@ -155,6 +150,7 @@ exports.updateProductById = async (req, res) => {
   }
 };
 
+// Hay que borrar las imagenes del blob storage
 /**
  * Delete a product by ID
  * @function
@@ -166,12 +162,13 @@ exports.updateProductById = async (req, res) => {
 exports.deleteProductById = async (req, res) => {
   try {
     const productId = req.params.id;
-    console.log(productId, "hola");
-    const product = await Product.findByIdAndDelete(productId).exec();
+
+    const product = deleteProductService(productId);
+
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
-    res.status(204).json(); // No content
+    res.status(200).send("Product deleted");
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });

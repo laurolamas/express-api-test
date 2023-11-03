@@ -15,6 +15,8 @@ const upload = multer();
 
 const { createProductValidator } = require("../validators/productValidator");
 
+const { checkAuth } = require("../utils/authValidator");
+
 /**
  * @description Create a new product
  * @method POST
@@ -26,6 +28,7 @@ router.post(
   "/",
   upload.array("images", 4),
   createProductValidator,
+  checkAuth,
   productController.createProduct
 );
 
@@ -63,7 +66,7 @@ router.get("/user/:id", productController.getProductsByUserId);
  * @param {string} id - The ID of the product to update
  * @returns {Object} The updated product
  */
-router.put("/:id", productController.updateProductById);
+router.put("/:id", checkAuth, productController.updateProductById);
 
 /**
  * @description Delete a product by ID
@@ -72,7 +75,7 @@ router.put("/:id", productController.updateProductById);
  * @param {string} id - The ID of the product to delete
  * @returns {Object} A message indicating that the product was deleted
  */
-router.delete("/:id", productController.deleteProductById);
+router.delete("/:id", checkAuth, productController.deleteProductById);
 
 // Export the router object
 module.exports = router;
