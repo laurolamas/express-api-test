@@ -8,13 +8,20 @@ const db = require("./utils/db"); // Import the database connection setup
 const cors = require("cors");
 
 // allow cors from any origin
-app.use(cors());
+// app.use(cors());
+
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Replace with the actual origin of your frontend
+    credentials: true,
+  })
+);
 
 // Middleware
 app.use(bodyParser.json());
 
 // Cookie parser
-app.use(cookieParser())
+app.use(cookieParser());
 
 // Routes
 const userRoutes = require("./routes/userRoutes"); // Import the user routes

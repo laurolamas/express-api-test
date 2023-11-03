@@ -10,10 +10,15 @@ const upload = multer();
 router.post("/login", authController.login);
 
 // User Logout
-router.delete("/logout", authController.logout);
+router.post("/logout", authController.logout);
 
 // User Registration
-router.post("/register", upload.single("profileImage"), createUserValidator, authController.register);
+router.post(
+  "/register",
+  upload.single("profileImage"),
+  createUserValidator,
+  authController.register
+);
 
 // Password Reset Request
 router.post("/reset-password/request", authController.requestPasswordReset);

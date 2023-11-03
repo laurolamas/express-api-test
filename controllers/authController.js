@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const { validationResult } = require("express-validator");
-const { uploadImage } = require('../services/imageService');
-const { createCookie } = require('../utils/cookies');
+const { uploadImage } = require("../services/imageService");
+const { createCookie } = require("../utils/cookies");
 
 // User Authentication
 exports.login = async (req, res) => {
@@ -18,17 +18,14 @@ exports.login = async (req, res) => {
     }
 
     // Check if password is correct
-    console.log("db password:", user.password)
-    console.log("input password:", password)
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log(isMatch)
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
     createCookie(res, user);
 
-    res.status(200).json({ message: 'Logged in' });
+    res.status(200).json({ message: "Logged in" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -60,7 +57,6 @@ exports.register = async (req, res) => {
   }
 
   try {
-
     // Check if user already exists by username
     const existingUser = await User.findOne({ username });
     if (existingUser) {
@@ -87,7 +83,7 @@ exports.register = async (req, res) => {
 
     // Save the user to the database
     try {
-      const savedUser = await user.save({ "select": "-password" });
+      const savedUser = await user.save({ select: "-password" });
 
       createCookie(res, savedUser);
 
@@ -97,9 +93,6 @@ exports.register = async (req, res) => {
       console.error(err);
       res.status(500).json({ message: "Internal server error" });
     }
-
-
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
