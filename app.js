@@ -7,8 +7,20 @@ const port = 8080;
 const db = require("./utils/db"); // Import the database connection setup
 const cors = require("cors");
 
-// allow cors from any origin
-app.use(cors());
+// Define a custom CORS middleware
+const customCors = (req, callback) => {
+  const origin = req.header('Origin');
+
+  // Check if the origin is valid; if not, do not set the 'Access-Control-Allow-Origin' header
+  if (origin) {
+    callback(null, { origin, credentials: true });
+  } else {
+    callback(new Error('Invalid origin'), false);
+  }
+};
+
+// Use the custom CORS middleware
+app.use(cors(customCors));
 
 // Middleware
 app.use(bodyParser.json());
