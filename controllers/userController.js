@@ -94,7 +94,6 @@ exports.updateUserById = async (req, res) => {
   const imageFile = req.file;
   const userId = req.user._id;
 
-
   try {
     const updatedFields = {
       username: username,
@@ -116,7 +115,6 @@ exports.updateUserById = async (req, res) => {
       select: "-password",
     }).exec();
 
-
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -135,6 +133,26 @@ exports.getProfile = async (req, res) => {
   const userId = req.user._id;
   try {
     const user = await User.findById(req.user._id).exec();
+    res.send(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Get the public profile of a user by username
+
+exports.getPublicProfile = async (req, res) => {
+  const username = req.params.username;
+  console.log("Fetching public profile of:", username);
+  try {
+    const user = await User.findOne(
+      { username: username },
+      { username: 1, name: 1, city: 1, imageUrl: 1, _id: 1 }
+    ).exec();
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
     res.send(user);
   } catch (err) {
     console.error(err);
